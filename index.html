@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DCA & Liquidation Calculator</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>DCA & Liquidation Price Calculator</h1>
+    <form id="tradeForm">
+      <!-- Trade Type -->
+      <label for="tradeType">Trade Type:</label>
+      <select id="tradeType">
+        <option value="long">Long</option>
+        <option value="short">Short</option>
+      </select>
+
+      <!-- Entry Price -->
+      <label for="entryPrice">Entry Price:</label>
+      <input type="number" id="entryPrice" required>
+
+      <!-- Margin -->
+      <label for="margin">Initial Margin ($):</label>
+      <input type="number" id="margin" required>
+
+      <!-- Leverage -->
+      <label for="leverage">Leverage:</label>
+      <input type="number" id="leverage" required>
+
+      <!-- Stop Loss -->
+      <label for="stopLoss">Stop Loss Price:</label>
+      <input type="number" id="stopLoss" required>
+
+      <!-- DCA Mode -->
+      <fieldset>
+        <legend>DCA Mode:</legend>
+        <input type="radio" id="autoDCA" name="dcaMode" value="auto" checked>
+        <label for="autoDCA">Automatic</label>
+        <input type="radio" id="manualDCA" name="dcaMode" value="manual">
+        <label for="manualDCA">Manual</label>
+      </fieldset>
+
+      <!-- DCA Details -->
+      <div id="dcaDetails">
+        <!-- Automatic DCA Options -->
+        <div id="autoDCAOptions">
+          <label for="dcaPercentage">DCA Percentage Drop:</label>
+          <input type="number" id="dcaPercentage" value="5">
+          <label for="dcaLevels">Number of DCA Levels:</label>
+          <input type="number" id="dcaLevels" value="3">
+        </div>
+
+        <!-- Manual DCA Options -->
+        <div id="manualDCAOptions" style="display:none;">
+          <label for="manualDCAInput">Enter DCA Prices and Margins (comma-separated, e.g., 2.10:100, 2.00:150):</label>
+          <input type="text" id="manualDCAInput">
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit">Calculate</button>
+    </form>
+
+    <!-- Results Display -->
+    <div id="results">
+      <h2>Results:</h2>
+      <p id="averageEntry">Average Entry Price: </p>
+      <p id="liquidationPrice">Liquidation Price: </p>
+      <p id="positionSize">Total Position Size: </p>
+      <p id="marginUsed">Total Margin Used: </p>
+      <p id="profitLoss">Projected Profit/Loss: </p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
