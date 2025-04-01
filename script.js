@@ -35,6 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   form.addEventListener("submit", function (e) {
     e.preventDefault();
+
     const tradeType = document.getElementById("tradeType").value;
     const entryPrice = parseFloat(document.getElementById("entryPrice").value);
     const margin = parseFloat(document.getElementById("margin").value);
@@ -86,18 +87,19 @@ document.addEventListener("DOMContentLoaded", function () {
       prices.forEach((input, index) => {
         const dcaPrice = parseFloat(input.value);
         const dcaMargin = parseFloat(margins[index].value);
-        weightedPrice += dcaPrice * dcaMargin;
-        totalMargin += dcaMargin;
-        marginBreakdown.push(`$${dcaMargin.toFixed(2)}`);
-        appendBreakdown(dcaPrice, dcaMargin);
+        if (!isNaN(dcaPrice) && !isNaN(dcaMargin)) {
+          weightedPrice += dcaPrice * dcaMargin;
+          totalMargin += dcaMargin;
+          marginBreakdown.push(`$${dcaMargin.toFixed(2)}`);
+          appendBreakdown(dcaPrice, dcaMargin);
+        }
       });
     }
 
     const averageEntry = weightedPrice / totalMargin;
-    const riskAmount = (Math.abs(averageEntry - stopLoss) / averageEntry) * leverage * totalMargin;
     const totalPosition = totalMargin * leverage;
+    const riskAmount = (Math.abs(averageEntry - stopLoss) / averageEntry) * leverage * totalMargin;
 
-    // P&L results:
     document.getElementById("marginUsed").textContent = `Total Margin Used: $${totalMargin.toFixed(2)} (${marginBreakdown.join(" + ")})`;
     document.getElementById("profitLoss").textContent = `Potential Loss at Stop Loss: -$${riskAmount.toFixed(2)}`;
 
