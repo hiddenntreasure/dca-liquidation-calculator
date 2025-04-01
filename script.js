@@ -4,6 +4,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const manualDCAOptions = document.getElementById("manualDCAOptions");
   const manualDCAContainer = document.getElementById("manualDCAContainer");
   const addManualDCA = document.getElementById("addManualDCA");
+  const targetContainer = document.getElementById("targetContainer");
+  const addTarget = document.getElementById("addTarget");
 
   document.querySelectorAll('input[name="dcaMode"]').forEach((radio) => {
     radio.addEventListener("change", function () {
@@ -14,8 +16,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
   addManualDCA.addEventListener("click", () => {
     const div = document.createElement("div");
-    div.innerHTML = 'Price: <input type="number" step="any" class="manualPrice"> Margin: <input type="number" step="any" class="manualMargin">';
+    div.innerHTML = `
+      Price: <input type="number" step="any" class="manualPrice">
+      Margin: <input type="number" step="any" class="manualMargin">
+      <button type="button" class="remove-btn">❌</button>`;
     manualDCAContainer.appendChild(div);
+    div.querySelector(".remove-btn").addEventListener("click", () => div.remove());
+  });
+
+  addTarget.addEventListener("click", () => {
+    const div = document.createElement("div");
+    div.innerHTML = `
+      TP Price: <input type="number" step="any" class="targetPrice">
+      <button type="button" class="remove-btn">❌</button>`;
+    targetContainer.appendChild(div);
+    div.querySelector(".remove-btn").addEventListener("click", () => div.remove());
   });
 
   form.addEventListener("submit", function (e) {
@@ -40,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const posSize = totalMargin * leverage;
       const row = document.createElement("div");
       row.className = "breakdown-row";
-      row.innerHTML = `<strong>Level ${level++}</strong>: Avg Entry: $${avgEntry.toFixed(4)}, Liq: $${liqPrice.toFixed(4)}, Margin: $${totalMargin.toFixed(2)}, Position: $${posSize.toFixed(2)}`;
+      row.innerHTML = `<strong>Level ${level++}</strong>: Buy Price: $${price.toFixed(4)} → Avg Entry: $${avgEntry.toFixed(4)}, Liq: $${liqPrice.toFixed(4)}, Margin: $${totalMargin.toFixed(2)}, Position: $${posSize.toFixed(2)}`;
       breakdownTable.appendChild(row);
     }
 
