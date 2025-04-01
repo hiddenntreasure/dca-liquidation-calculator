@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const autoDCAOptions = document.getElementById("autoDCAOptions");
   const manualDCAOptions = document.getElementById("manualDCAOptions");
 
-  // Toggle DCA input mode
   dcaModeRadios.forEach((radio) => {
     radio.addEventListener("change", function () {
       if (this.value === "auto") {
@@ -39,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const dcaPrice = tradeType === "long"
           ? entryPrice * (1 - (dcaPercentage / 100) * i)
           : entryPrice * (1 + (dcaPercentage / 100) * i);
-        const dcaMargin = margin; // equal size DCA
+        const dcaMargin = margin;
         weightedPrice += dcaPrice * dcaMargin;
         totalMargin += dcaMargin;
         positionSize += dcaPrice * dcaMargin * leverage;
@@ -60,7 +59,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const averageEntry = weightedPrice / totalMargin;
 
-    // Calculate liquidation price estimate (simple approximation)
     let liquidationPrice;
     if (tradeType === "long") {
       liquidationPrice = averageEntry - (averageEntry / leverage);
@@ -68,10 +66,15 @@ document.addEventListener("DOMContentLoaded", function () {
       liquidationPrice = averageEntry + (averageEntry / leverage);
     }
 
-    // Display Results
+    const priceDiff = tradeType === "long"
+      ? averageEntry - stopLoss
+      : stopLoss - averageEntry;
+    const riskAmount = (priceDiff / averageEntry) * leverage * totalMargin;
+
     document.getElementById("averageEntry").textContent = `Average Entry Price: $${averageEntry.toFixed(4)}`;
     document.getElementById("liquidationPrice").textContent = `Estimated Liquidation Price: $${liquidationPrice.toFixed(4)}`;
     document.getElementById("positionSize").textContent = `Total Position Size: $${positionSize.toFixed(2)}`;
     document.getElementById("marginUsed").textContent = `Total Margin Used: $${totalMargin.toFixed(2)}`;
+    document.getElementById("profitLoss").textContent = `Potential Loss at Stop Loss: -$${riskAmount.toFixed(2)}`;
   });
 });
