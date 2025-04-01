@@ -10,30 +10,24 @@
     <h1>DCA & Liquidation Price Calculator</h1>
 
     <form id="tradeForm">
-      <!-- Trade Type -->
       <label for="tradeType">Trade Type:</label>
       <select id="tradeType">
         <option value="long">Long</option>
         <option value="short">Short</option>
       </select>
 
-      <!-- Entry Price -->
       <label for="entryPrice">Entry Price:</label>
-      <input type="number" id="entryPrice" step="any" required>
+      <input type="number" step="any" id="entryPrice" required>
 
-      <!-- Initial Margin -->
       <label for="margin">Initial Margin ($):</label>
-      <input type="number" id="margin" step="any" required>
+      <input type="number" step="any" id="margin" required>
 
-      <!-- Leverage -->
       <label for="leverage">Leverage:</label>
-      <input type="number" id="leverage" step="any" required>
+      <input type="number" step="any" id="leverage" required>
 
-      <!-- Stop Loss -->
       <label for="stopLoss">Stop Loss Price:</label>
-      <input type="number" id="stopLoss" step="any" required>
+      <input type="number" step="any" id="stopLoss" required>
 
-      <!-- DCA Mode -->
       <fieldset>
         <legend>DCA Mode:</legend>
         <input type="radio" id="autoDCA" name="dcaMode" value="auto" checked>
@@ -42,7 +36,6 @@
         <label for="manualDCA">Manual</label>
       </fieldset>
 
-      <!-- Auto DCA Options -->
       <div id="autoDCAOptions">
         <label for="dcaPercentage">DCA Drop (%) Per Level:</label>
         <input type="number" id="dcaPercentage" value="5" step="any">
@@ -50,7 +43,6 @@
         <input type="number" id="dcaLevels" value="3">
       </div>
 
-      <!-- Manual DCA Input -->
       <div id="manualDCAOptions" style="display: none;">
         <label for="manualDCAInput">Manual DCA (Price:Margin) e.g. 2.25:50,2.15:100:</label>
         <input type="text" id="manualDCAInput" placeholder="e.g. 2.25:50,2.15:100">
@@ -59,13 +51,13 @@
       <button type="submit">Calculate</button>
     </form>
 
-    <!-- Results -->
     <div id="results">
       <h2>Results:</h2>
       <p id="averageEntry">Average Entry Price: </p>
-      <p id="liquidationPrice">Liquidation Price: </p>
+      <p id="liquidationPrice">Estimated Liquidation Price: </p>
       <p id="positionSize">Total Position Size (USD): </p>
       <p id="marginUsed">Total Margin Used: </p>
+      <p id="profitLoss">Potential Loss at Stop Loss: </p>
     </div>
   </div>
 
