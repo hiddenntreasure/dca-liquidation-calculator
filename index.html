@@ -44,8 +44,9 @@
       </div>
 
       <div id="manualDCAOptions" style="display: none;">
-        <label for="manualDCAInput">Manual DCA (Price:Margin) e.g. 2.25:50,2.15:100:</label>
-        <input type="text" id="manualDCAInput" placeholder="e.g. 2.25:50,2.15:100">
+        <label>Manual DCA Levels:</label>
+        <div id="manualDCAContainer"></div>
+        <button type="button" id="addManualDCA">+ Add Manual DCA Level</button>
       </div>
 
       <button type="submit">Calculate</button>
@@ -58,6 +59,11 @@
       <p id="positionSize">Total Position Size (USD): </p>
       <p id="marginUsed">Total Margin Used: </p>
       <p id="profitLoss">Potential Loss at Stop Loss: </p>
+    </div>
+
+    <div id="breakdown">
+      <h2>DCA Breakdown:</h2>
+      <div id="dcaBreakdownTable"></div>
     </div>
   </div>
 
