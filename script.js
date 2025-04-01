@@ -4,6 +4,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const manualDCAOptions = document.getElementById("manualDCAOptions");
   const manualDCAContainer = document.getElementById("manualDCAContainer");
   const addManualDCA = document.getElementById("addManualDCA");
+  const targetContainer = document.getElementById("targetContainer");
+  const addTarget = document.getElementById("addTarget");
 
   document.querySelectorAll('input[name="dcaMode"]').forEach((radio) => {
     radio.addEventListener("change", function () {
@@ -22,6 +24,15 @@ document.addEventListener("DOMContentLoaded", function () {
     div.querySelector(".remove-btn").addEventListener("click", () => div.remove());
   });
 
+  addTarget.addEventListener("click", () => {
+    const div = document.createElement("div");
+    div.innerHTML = `
+      TP Price: <input type="number" step="any" class="targetPrice">
+      <button type="button" class="remove-btn">❌</button>`;
+    targetContainer.appendChild(div);
+    div.querySelector(".remove-btn").addEventListener("click", () => div.remove());
+  });
+
   form.addEventListener("submit", function (e) {
     e.preventDefault();
     const tradeType = document.getElementById("tradeType").value;
@@ -29,19 +40,23 @@ document.addEventListener("DOMContentLoaded", function () {
     const margin = parseFloat(document.getElementById("margin").value);
     const leverage = parseFloat(document.getElementById("leverage").value);
     const stopLoss = parseFloat(document.getElementById("stopLoss").value);
-    const targetPrice = parseFloat(document.getElementById("targetPrice").value);
     const dcaMode = document.querySelector('input[name="dcaMode"]:checked').value;
 
     let totalMargin = margin;
     let weightedPrice = entryPrice * margin;
+    let marginBreakdown = [`$${margin.toFixed(2)}`];
 
     const breakdownTable = document.getElementById("dcaBreakdownTable");
     breakdownTable.innerHTML = "";
+    const tpOutput = document.getElementById("tpProfits");
+    tpOutput.innerHTML = "";
     let level = 1;
 
     function appendBreakdown(price, margin) {
       const avgEntry = weightedPrice / totalMargin;
-      const liqPrice = tradeType === "long" ? avgEntry - avgEntry / leverage : avgEntry + avgEntry / leverage;
+      const liqPrice = tradeType === "long"
+        ? avgEntry - avgEntry / leverage
+        : avgEntry + avgEntry / leverage;
       const posSize = totalMargin * leverage;
       const row = document.createElement("div");
       row.className = "breakdown-row";
@@ -54,7 +69,6 @@ document.addEventListener("DOMContentLoaded", function () {
     if (dcaMode === "auto") {
       const dcaPercentage = parseFloat(document.getElementById("dcaPercentage").value);
       const dcaLevels = parseInt(document.getElementById("dcaLevels").value);
-
       for (let i = 1; i <= dcaLevels; i++) {
         const dcaPrice = tradeType === "long"
           ? entryPrice * (1 - (dcaPercentage / 100) * i)
@@ -62,6 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const dcaMargin = margin;
         weightedPrice += dcaPrice * dcaMargin;
         totalMargin += dcaMargin;
+        marginBreakdown.push(`$${dcaMargin.toFixed(2)}`);
         appendBreakdown(dcaPrice, dcaMargin);
       }
     } else {
@@ -73,25 +88,30 @@ document.addEventListener("DOMContentLoaded", function () {
         const dcaMargin = parseFloat(margins[index].value);
         weightedPrice += dcaPrice * dcaMargin;
         totalMargin += dcaMargin;
+        marginBreakdown.push(`$${dcaMargin.toFixed(2)}`);
         appendBreakdown(dcaPrice, dcaMargin);
       });
     }
 
     const averageEntry = weightedPrice / totalMargin;
+    const riskAmount = (Math.abs(averageEntry - stopLoss) / averageEntry) * leverage * totalMargin;
     const totalPosition = totalMargin * leverage;
 
-    // Stop loss risk
-    const riskAmount = (Math.abs(averageEntry - stopLoss) / averageEntry) * leverage * totalMargin;
+    // P&L results:
+    document.getElementById("marginUsed").textContent = `Total Margin Used: $${totalMargin.toFixed(2)} (${marginBreakdown.join(" + ")})`;
     document.getElementById("profitLoss").textContent = `Potential Loss at Stop Loss: -$${riskAmount.toFixed(2)}`;
 
-    // Target profit
-    if (targetPrice && !isNaN(targetPrice)) {
-      const gain = tradeType === "long"
-        ? ((targetPrice - averageEntry) / averageEntry) * leverage * totalMargin
-        : ((averageEntry - targetPrice) / averageEntry) * leverage * totalMargin;
-      document.getElementById("targetProfit").textContent = `Potential Profit at Target: +$${gain.toFixed(2)}`;
-    } else {
-      document.getElementById("targetProfit").textContent = `Potential Profit at Target: -`;
-    }
+    const targetPrices = document.querySelectorAll(".targetPrice");
+    targetPrices.forEach((tpInput, idx) => {
+      const tp = parseFloat(tpInput.value);
+      if (!isNaN(tp)) {
+        const profit = tradeType === "long"
+          ? ((tp - averageEntry) / averageEntry) * leverage * totalMargin
+          : ((averageEntry - tp) / averageEntry) * leverage * totalMargin;
+        const line = document.createElement("p");
+        line.textContent = `TP${idx + 1} Profit: $${profit.toFixed(2)}`;
+        tpOutput.appendChild(line);
+      }
+    });
   });
 });
