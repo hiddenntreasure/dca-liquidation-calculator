@@ -19,16 +19,17 @@ document.addEventListener("DOMContentLoaded", function () {
     div.innerHTML = `
       Price: <input type="number" step="any" class="manualPrice">
       Margin: <input type="number" step="any" class="manualMargin">
-      <button type="button" class="remove-btn">❌</button>`;
+      <button type="button" class="remove-btn">🗑</button>`;
     manualDCAContainer.appendChild(div);
     div.querySelector(".remove-btn").addEventListener("click", () => div.remove());
   });
 
   addTarget.addEventListener("click", () => {
     const div = document.createElement("div");
+    const count = targetContainer.children.length + 1;
     div.innerHTML = `
-      TP Price: <input type="number" step="any" class="targetPrice">
-      <button type="button" class="remove-btn">❌</button>`;
+      TP${count} Price: <input type="number" step="any" class="targetPrice">
+      <button type="button" class="remove-btn">🗑</button>`;
     targetContainer.appendChild(div);
     div.querySelector(".remove-btn").addEventListener("click", () => div.remove());
   });
@@ -98,10 +99,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const averageEntry = weightedPrice / totalMargin;
     const totalPosition = totalMargin * leverage;
-    const riskAmount = (Math.abs(averageEntry - stopLoss) / averageEntry) * leverage * totalMargin;
+
+    // LOSS
+    const lossText = document.getElementById("profitLoss");
+    if (isNaN(stopLoss)) {
+      lossText.innerHTML = `<span class="red-text">Potential Loss at Stop Loss: N/A</span>`;
+    } else {
+      const riskAmount = (Math.abs(averageEntry - stopLoss) / averageEntry) * leverage * totalMargin;
+      lossText.innerHTML = `<span class="red-text">Potential Loss at Stop Loss: -$${riskAmount.toFixed(2)}</span>`;
+    }
 
     document.getElementById("marginUsed").textContent = `Total Margin Used: $${totalMargin.toFixed(2)} (${marginBreakdown.join(" + ")})`;
-    document.getElementById("profitLoss").textContent = `Potential Loss at Stop Loss: -$${riskAmount.toFixed(2)}`;
 
     const targetPrices = document.querySelectorAll(".targetPrice");
     targetPrices.forEach((tpInput, idx) => {
@@ -111,7 +119,7 @@ document.addEventListener("DOMContentLoaded", function () {
           ? ((tp - averageEntry) / averageEntry) * leverage * totalMargin
           : ((averageEntry - tp) / averageEntry) * leverage * totalMargin;
         const line = document.createElement("p");
-        line.textContent = `TP${idx + 1} Profit: $${profit.toFixed(2)}`;
+        line.innerHTML = `TP${idx + 1} Profit: <span class="green-text">$${profit.toFixed(2)}</span>`;
         tpOutput.appendChild(line);
       }
     });
