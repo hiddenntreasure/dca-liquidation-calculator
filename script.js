@@ -29,7 +29,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let totalMargin = margin;
     let weightedPrice = entryPrice * margin;
-    let positionSize = entryPrice * margin * leverage;
 
     const breakdownTable = document.getElementById("dcaBreakdownTable");
     breakdownTable.innerHTML = "";
