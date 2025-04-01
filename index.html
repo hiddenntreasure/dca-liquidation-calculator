@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>DCA & P&L Calculator</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <h1>DCA & P&L Calculator</h1>
+  <div class="container">
+
+    <!-- Left Panel -->
+    <div class="left-panel">
+      <form id="tradeForm">
+        <label for="tradeType">Trade Type:</label>
+        <select id="tradeType">
+          <option value="long">Long</option>
+          <option value="short">Short</option>
+        </select>
+
+        <label for="entryPrice">Entry Price:</label>
+        <input type="number" step="any" id="entryPrice" required />
+
+        <label for="margin">Initial Margin ($):</label>
+        <input type="number" step="any" id="margin" required />
+
+        <label for="leverage">Leverage:</label>
+        <input type="number" step="any" id="leverage" required />
+
+        <label for="stopLoss">Stop Loss Price (optional):</label>
+        <input type="number" step="any" id="stopLoss" />
+
+        <div id="pnlOutput" class="results-panel">
+          <h2>P&L:</h2>
+          <p id="marginUsed"></p>
+          <p id="profitLoss"></p>
+          <div id="tpProfits"></div>
+        </div>
+
+        <button type="submit">Calculate</button>
+      </form>
+    </div>
+
+    <!-- Right Panel -->
+    <div class="right-panel">
+      <fieldset>
+        <legend>DCA Mode:</legend>
+        <input type="radio" id="autoDCA" name="dcaMode" value="auto" checked />
+        <label for="autoDCA">Automatic</label>
+        <input type="radio" id="manualDCA" name="dcaMode" value="manual" />
+        <label for="manualDCA">Manual</label>
+      </fieldset>
+
+      <div id="autoDCAOptions">
+        <label for="dcaPercentage">DCA Drop (%) Per Level:</label>
+        <input type="number" id="dcaPercentage" value="5" step="any" />
+        <label for="dcaLevels">Number of DCA Levels:</label>
+        <input type="number" id="dcaLevels" value="3" />
+      </div>
+
+      <div id="manualDCAOptions" style="display: none;">
+        <label>Manual DCA Levels:</label>
+        <div id="manualDCAContainer"></div>
+        <button type="button" id="addManualDCA">+ Add Manual DCA Level</button>
+      </div>
+
+      <div id="targetSection">
+        <label>Target Points:</label>
+        <div id="targetContainer"></div>
+        <button type="button" id="addTarget">+ Add Target</button>
+      </div>
+
+      <div id="breakdown">
+        <h2>DCA Breakdown:</h2>
+        <div id="dcaBreakdownTable"></div>
+      </div>
+    </div>
+
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
