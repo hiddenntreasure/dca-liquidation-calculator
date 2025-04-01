@@ -6,28 +6,45 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <h1>DCA & Liquidation Price Calculator</h1>
   <div class="container">
-    <h1>DCA & Liquidation Price Calculator</h1>
 
-    <form id="tradeForm">
-      <label for="tradeType">Trade Type:</label>
-      <select id="tradeType">
-        <option value="long">Long</option>
-        <option value="short">Short</option>
-      </select>
+    <!-- Left Panel -->
+    <div class="left-panel">
+      <form id="tradeForm">
+        <label for="tradeType">Trade Type:</label>
+        <select id="tradeType">
+          <option value="long">Long</option>
+          <option value="short">Short</option>
+        </select>
 
-      <label for="entryPrice">Entry Price:</label>
-      <input type="number" step="any" id="entryPrice" required>
+        <label for="entryPrice">Entry Price:</label>
+        <input type="number" step="any" id="entryPrice" required>
 
-      <label for="margin">Initial Margin ($):</label>
-      <input type="number" step="any" id="margin" required>
+        <label for="margin">Initial Margin ($):</label>
+        <input type="number" step="any" id="margin" required>
 
-      <label for="leverage">Leverage:</label>
-      <input type="number" step="any" id="leverage" required>
+        <label for="leverage">Leverage:</label>
+        <input type="number" step="any" id="leverage" required>
 
-      <label for="stopLoss">Stop Loss Price:</label>
-      <input type="number" step="any" id="stopLoss" required>
+        <label for="stopLoss">Stop Loss Price:</label>
+        <input type="number" step="any" id="stopLoss" required>
 
+        <button type="submit">Calculate</button>
+      </form>
+
+      <div id="results">
+        <h2>Results:</h2>
+        <p id="averageEntry">Average Entry Price: </p>
+        <p id="liquidationPrice">Estimated Liquidation Price: </p>
+        <p id="positionSize">Total Position Size (USD): </p>
+        <p id="marginUsed">Total Margin Used: </p>
+        <p id="profitLoss">Potential Loss at Stop Loss: </p>
+      </div>
+    </div>
+
+    <!-- Right Panel -->
+    <div class="right-panel">
       <fieldset>
         <legend>DCA Mode:</legend>
         <input type="radio" id="autoDCA" name="dcaMode" value="auto" checked>
@@ -49,22 +66,12 @@
         <button type="button" id="addManualDCA">+ Add Manual DCA Level</button>
       </div>
 
-      <button type="submit">Calculate</button>
-    </form>
-
-    <div id="results">
-      <h2>Results:</h2>
-      <p id="averageEntry">Average Entry Price: </p>
-      <p id="liquidationPrice">Estimated Liquidation Price: </p>
-      <p id="positionSize">Total Position Size (USD): </p>
-      <p id="marginUsed">Total Margin Used: </p>
-      <p id="profitLoss">Potential Loss at Stop Loss: </p>
+      <div id="breakdown">
+        <h2>DCA Breakdown:</h2>
+        <div id="dcaBreakdownTable"></div>
+      </div>
     </div>
 
-    <div id="breakdown">
-      <h2>DCA Breakdown:</h2>
-      <div id="dcaBreakdownTable"></div>
-    </div>
   </div>
 
   <script src="script.js"></script>
