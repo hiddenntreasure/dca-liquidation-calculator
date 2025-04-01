@@ -30,17 +30,17 @@
         <label for="stopLoss">Stop Loss Price:</label>
         <input type="number" step="any" id="stopLoss" required>
 
+        <div id="results">
+          <h2>Results:</h2>
+          <p id="averageEntry">Average Entry Price: </p>
+          <p id="liquidationPrice">Estimated Liquidation Price: </p>
+          <p id="positionSize">Total Position Size (USD): </p>
+          <p id="marginUsed">Total Margin Used: </p>
+          <p id="profitLoss">Potential Loss at Stop Loss: </p>
+        </div>
+
         <button type="submit">Calculate</button>
       </form>
-
-      <div id="results">
-        <h2>Results:</h2>
-        <p id="averageEntry">Average Entry Price: </p>
-        <p id="liquidationPrice">Estimated Liquidation Price: </p>
-        <p id="positionSize">Total Position Size (USD): </p>
-        <p id="marginUsed">Total Margin Used: </p>
-        <p id="profitLoss">Potential Loss at Stop Loss: </p>
-      </div>
     </div>
 
     <!-- Right Panel -->
@@ -66,12 +66,17 @@
         <button type="button" id="addManualDCA">+ Add Manual DCA Level</button>
       </div>
 
+      <div id="targetSection">
+        <label>Target Points:</label>
+        <div id="targetContainer"></div>
+        <button type="button" id="addTarget">+ Add Target</button>
+      </div>
+
       <div id="breakdown">
         <h2>DCA Breakdown:</h2>
         <div id="dcaBreakdownTable"></div>
       </div>
     </div>
-
   </div>
 
   <script src="script.js"></script>
