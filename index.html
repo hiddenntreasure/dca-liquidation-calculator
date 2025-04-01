@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>DCA & Liquidation Calculator</title>
+  <title>DCA & P&L Calculator</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>DCA & Liquidation Price Calculator</h1>
+  <h1>DCA & P&L Calculator</h1>
   <div class="container">
 
     <!-- Left Panel -->
@@ -30,13 +30,11 @@
         <label for="stopLoss">Stop Loss Price:</label>
         <input type="number" step="any" id="stopLoss" required>
 
-        <label for="targetPrice">Target Price:</label>
-        <input type="number" step="any" id="targetPrice">
-
-        <div id="results">
-          <h2>Profit & Loss</h2>
-          <p id="profitLoss">Potential Loss at Stop Loss: </p>
-          <p id="targetProfit">Potential Profit at Target: </p>
+        <div id="pnlOutput" class="results-panel">
+          <h2>P&L:</h2>
+          <p id="marginUsed"></p>
+          <p id="profitLoss"></p>
+          <div id="tpProfits"></div>
         </div>
 
         <button type="submit">Calculate</button>
@@ -64,6 +62,12 @@
         <label>Manual DCA Levels:</label>
         <div id="manualDCAContainer"></div>
         <button type="button" id="addManualDCA">+ Add Manual DCA Level</button>
+      </div>
+
+      <div id="targetSection">
+        <label>Target Points:</label>
+        <div id="targetContainer"></div>
+        <button type="button" id="addTarget">+ Add Target</button>
       </div>
 
       <div id="breakdown">
