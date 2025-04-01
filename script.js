@@ -4,8 +4,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const manualDCAOptions = document.getElementById("manualDCAOptions");
   const manualDCAContainer = document.getElementById("manualDCAContainer");
   const addManualDCA = document.getElementById("addManualDCA");
-  const targetContainer = document.getElementById("targetContainer");
-  const addTarget = document.getElementById("addTarget");
 
   document.querySelectorAll('input[name="dcaMode"]').forEach((radio) => {
     radio.addEventListener("change", function () {
@@ -24,15 +22,6 @@ document.addEventListener("DOMContentLoaded", function () {
     div.querySelector(".remove-btn").addEventListener("click", () => div.remove());
   });
 
-  addTarget.addEventListener("click", () => {
-    const div = document.createElement("div");
-    div.innerHTML = `
-      TP Price: <input type="number" step="any" class="targetPrice">
-      <button type="button" class="remove-btn">❌</button>`;
-    targetContainer.appendChild(div);
-    div.querySelector(".remove-btn").addEventListener("click", () => div.remove());
-  });
-
   form.addEventListener("submit", function (e) {
     e.preventDefault();
     const tradeType = document.getElementById("tradeType").value;
@@ -40,6 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const margin = parseFloat(document.getElementById("margin").value);
     const leverage = parseFloat(document.getElementById("leverage").value);
     const stopLoss = parseFloat(document.getElementById("stopLoss").value);
+    const targetPrice = parseFloat(document.getElementById("targetPrice").value);
     const dcaMode = document.querySelector('input[name="dcaMode"]:checked').value;
 
     let totalMargin = margin;
@@ -88,16 +78,20 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     const averageEntry = weightedPrice / totalMargin;
-    const liquidationPrice = tradeType === "long"
-      ? averageEntry - (averageEntry / leverage)
-      : averageEntry + (averageEntry / leverage);
-    const riskAmount = (Math.abs(averageEntry - stopLoss) / averageEntry) * leverage * totalMargin;
     const totalPosition = totalMargin * leverage;
 
-    document.getElementById("averageEntry").textContent = `Average Entry Price: $${averageEntry.toFixed(4)}`;
-    document.getElementById("liquidationPrice").textContent = `Estimated Liquidation Price: $${liquidationPrice.toFixed(4)}`;
-    document.getElementById("positionSize").textContent = `Total Position Size: $${totalPosition.toFixed(2)}`;
-    document.getElementById("marginUsed").textContent = `Total Margin Used: $${totalMargin.toFixed(2)}`;
+    // Stop loss risk
+    const riskAmount = (Math.abs(averageEntry - stopLoss) / averageEntry) * leverage * totalMargin;
     document.getElementById("profitLoss").textContent = `Potential Loss at Stop Loss: -$${riskAmount.toFixed(2)}`;
+
+    // Target profit
+    if (targetPrice && !isNaN(targetPrice)) {
+      const gain = tradeType === "long"
+        ? ((targetPrice - averageEntry) / averageEntry) * leverage * totalMargin
+        : ((averageEntry - targetPrice) / averageEntry) * leverage * totalMargin;
+      document.getElementById("targetProfit").textContent = `Potential Profit at Target: +$${gain.toFixed(2)}`;
+    } else {
+      document.getElementById("targetProfit").textContent = `Potential Profit at Target: -`;
+    }
   });
 });
