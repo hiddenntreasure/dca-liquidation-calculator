@@ -1,3 +1,4 @@
+/* General Styling */
 body {
   font-family: Arial, sans-serif;
   background-color: #f4f4f4;
@@ -6,42 +7,77 @@ body {
 }
 
 .container {
-  width: 50%;
+  width: 90%;
+  max-width: 700px;
   margin: 50px auto;
   padding: 20px;
-  background-color: #fff;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  background-color: #ffffff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
 }
 
 h1, h2 {
   text-align: center;
+  color: #333;
 }
 
+/* Form Elements */
 form {
   display: flex;
   flex-direction: column;
+  gap: 12px;
 }
 
-label, input, select, fieldset {
-  margin-bottom: 10px;
+label {
+  font-weight: bold;
 }
 
+input[type="number"],
+input[type="text"],
+select {
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Radio Buttons */
+fieldset {
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+legend {
+  font-weight: bold;
+}
+
+/* Button Styling */
 button {
   padding: 10px;
   background-color: #28a745;
-  color: #fff;
+  color: #ffffff;
+  font-size: 16px;
   border: none;
   cursor: pointer;
+  border-radius: 4px;
+  margin-top: 10px;
 }
 
 button:hover {
   background-color: #218838;
 }
 
+/* Results Display */
 #results {
-  margin-top: 20px;
-  padding: 15px;
+  margin-top: 30px;
   background-color: #eef;
   border: 1px solid #ccc;
+  padding: 20px;
   border-radius: 5px;
+}
+
+#results p {
+  margin: 8px 0;
+  font-size: 16px;
+  color: #333;
 }
