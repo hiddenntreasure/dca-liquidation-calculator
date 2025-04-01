@@ -51,7 +51,7 @@ button:hover {
   background-color: #218838;
 }
 
-#results, #breakdown {
+.results-panel, #breakdown {
   margin-top: 20px;
   background-color: #eef;
   border: 1px solid #ccc;
@@ -59,7 +59,7 @@ button:hover {
   border-radius: 5px;
 }
 
-#results p, .breakdown-row {
+.results-panel p, .breakdown-row {
   font-size: 16px;
   margin: 6px 0;
 }
@@ -67,4 +67,18 @@ button:hover {
 .breakdown-row {
   padding: 5px 0;
   border-bottom: 1px solid #ccc;
+}
+
+.remove-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 4px 10px;
+  margin-left: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.remove-btn:hover {
+  background-color: #b52a37;
 }
