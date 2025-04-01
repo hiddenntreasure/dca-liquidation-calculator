@@ -1,24 +1,25 @@
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("tradeForm");
-  const dcaModeRadios = document.querySelectorAll('input[name="dcaMode"]');
   const autoDCAOptions = document.getElementById("autoDCAOptions");
   const manualDCAOptions = document.getElementById("manualDCAOptions");
+  const manualDCAContainer = document.getElementById("manualDCAContainer");
+  const addManualDCA = document.getElementById("addManualDCA");
 
-  dcaModeRadios.forEach((radio) => {
+  document.querySelectorAll('input[name="dcaMode"]').forEach((radio) => {
     radio.addEventListener("change", function () {
-      if (this.value === "auto") {
-        autoDCAOptions.style.display = "block";
-        manualDCAOptions.style.display = "none";
-      } else {
-        autoDCAOptions.style.display = "none";
-        manualDCAOptions.style.display = "block";
-      }
+      autoDCAOptions.style.display = this.value === "auto" ? "block" : "none";
+      manualDCAOptions.style.display = this.value === "manual" ? "block" : "none";
     });
+  });
+
+  addManualDCA.addEventListener("click", () => {
+    const div = document.createElement("div");
+    div.innerHTML = 'Price: <input type="number" step="any" class="manualPrice"> Margin: <input type="number" step="any" class="manualMargin">';
+    manualDCAContainer.appendChild(div);
   });
 
   form.addEventListener("submit", function (e) {
     e.preventDefault();
-
     const tradeType = document.getElementById("tradeType").value;
     const entryPrice = parseFloat(document.getElementById("entryPrice").value);
     const margin = parseFloat(document.getElementById("margin").value);
@@ -29,6 +30,22 @@ document.addEventListener("DOMContentLoaded", function () {
     let totalMargin = margin;
     let weightedPrice = entryPrice * margin;
     let positionSize = entryPrice * margin * leverage;
+
+    const breakdownTable = document.getElementById("dcaBreakdownTable");
+    breakdownTable.innerHTML = "";
+    let level = 1;
+
+    function appendBreakdown(price, margin) {
+      const avgEntry = weightedPrice / totalMargin;
+      const liqPrice = tradeType === "long" ? avgEntry - avgEntry / leverage : avgEntry + avgEntry / leverage;
+      const posSize = totalMargin * leverage;
+      const row = document.createElement("div");
+      row.className = "breakdown-row";
+      row.innerHTML = `<strong>Level ${level++}</strong>: Avg Entry: $${avgEntry.toFixed(4)}, Liq: $${liqPrice.toFixed(4)}, Margin: $${totalMargin.toFixed(2)}, Position: $${posSize.toFixed(2)}`;
+      breakdownTable.appendChild(row);
+    }
+
+    appendBreakdown(entryPrice, margin);
 
     if (dcaMode === "auto") {
       const dcaPercentage = parseFloat(document.getElementById("dcaPercentage").value);
@@ -41,39 +58,31 @@ document.addEventListener("DOMContentLoaded", function () {
         const dcaMargin = margin;
         weightedPrice += dcaPrice * dcaMargin;
         totalMargin += dcaMargin;
-        positionSize += dcaPrice * dcaMargin * leverage;
+        appendBreakdown(dcaPrice, dcaMargin);
       }
     } else {
-      const manualInput = document.getElementById("manualDCAInput").value;
-      const pairs = manualInput.split(",");
+      const prices = document.querySelectorAll(".manualPrice");
+      const margins = document.querySelectorAll(".manualMargin");
 
-      pairs.forEach((pair) => {
-        const [priceStr, marginStr] = pair.split(":");
-        const dcaPrice = parseFloat(priceStr.trim());
-        const dcaMargin = parseFloat(marginStr.trim());
+      prices.forEach((input, index) => {
+        const dcaPrice = parseFloat(input.value);
+        const dcaMargin = parseFloat(margins[index].value);
         weightedPrice += dcaPrice * dcaMargin;
         totalMargin += dcaMargin;
-        positionSize += dcaPrice * dcaMargin * leverage;
+        appendBreakdown(dcaPrice, dcaMargin);
       });
     }
 
     const averageEntry = weightedPrice / totalMargin;
-
-    let liquidationPrice;
-    if (tradeType === "long") {
-      liquidationPrice = averageEntry - (averageEntry / leverage);
-    } else {
-      liquidationPrice = averageEntry + (averageEntry / leverage);
-    }
-
-    const priceDiff = tradeType === "long"
-      ? averageEntry - stopLoss
-      : stopLoss - averageEntry;
-    const riskAmount = (priceDiff / averageEntry) * leverage * totalMargin;
+    const liquidationPrice = tradeType === "long"
+      ? averageEntry - (averageEntry / leverage)
+      : averageEntry + (averageEntry / leverage);
+    const riskAmount = (Math.abs(averageEntry - stopLoss) / averageEntry) * leverage * totalMargin;
+    const totalPosition = totalMargin * leverage;
 
     document.getElementById("averageEntry").textContent = `Average Entry Price: $${averageEntry.toFixed(4)}`;
     document.getElementById("liquidationPrice").textContent = `Estimated Liquidation Price: $${liquidationPrice.toFixed(4)}`;
-    document.getElementById("positionSize").textContent = `Total Position Size: $${positionSize.toFixed(2)}`;
+    document.getElementById("positionSize").textContent = `Total Position Size: $${totalPosition.toFixed(2)}`;
     document.getElementById("marginUsed").textContent = `Total Margin Used: $${totalMargin.toFixed(2)}`;
     document.getElementById("profitLoss").textContent = `Potential Loss at Stop Loss: -$${riskAmount.toFixed(2)}`;
   });
