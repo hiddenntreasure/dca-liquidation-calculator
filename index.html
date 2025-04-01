@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>DCA & P&L Calculator</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <h1>DCA & P&L Calculator</h1>
@@ -19,16 +19,16 @@
         </select>
 
         <label for="entryPrice">Entry Price:</label>
-        <input type="number" step="any" id="entryPrice" required>
+        <input type="number" step="any" id="entryPrice" required />
 
         <label for="margin">Initial Margin ($):</label>
-        <input type="number" step="any" id="margin" required>
+        <input type="number" step="any" id="margin" required />
 
         <label for="leverage">Leverage:</label>
-        <input type="number" step="any" id="leverage" required>
+        <input type="number" step="any" id="leverage" required />
 
-        <label for="stopLoss">Stop Loss Price:</label>
-        <input type="number" step="any" id="stopLoss" required>
+        <label for="stopLoss">Stop Loss Price (optional):</label>
+        <input type="number" step="any" id="stopLoss" />
 
         <div id="pnlOutput" class="results-panel">
           <h2>P&L:</h2>
@@ -45,17 +45,17 @@
     <div class="right-panel">
       <fieldset>
         <legend>DCA Mode:</legend>
-        <input type="radio" id="autoDCA" name="dcaMode" value="auto" checked>
+        <input type="radio" id="autoDCA" name="dcaMode" value="auto" checked />
         <label for="autoDCA">Automatic</label>
-        <input type="radio" id="manualDCA" name="dcaMode" value="manual">
+        <input type="radio" id="manualDCA" name="dcaMode" value="manual" />
         <label for="manualDCA">Manual</label>
       </fieldset>
 
       <div id="autoDCAOptions">
         <label for="dcaPercentage">DCA Drop (%) Per Level:</label>
-        <input type="number" id="dcaPercentage" value="5" step="any">
+        <input type="number" id="dcaPercentage" value="5" step="any" />
         <label for="dcaLevels">Number of DCA Levels:</label>
-        <input type="number" id="dcaLevels" value="3">
+        <input type="number" id="dcaLevels" value="3" />
       </div>
 
       <div id="manualDCAOptions" style="display: none;">
@@ -77,7 +77,6 @@
     </div>
 
   </div>
-
   <script src="script.js"></script>
 </body>
 </html>
